@@ -1,4 +1,4 @@
-package com.donnedesang.donnedesang;
+package com.donnedesang.controller;
 
 import java.io.*;
 import jakarta.servlet.http.*;
