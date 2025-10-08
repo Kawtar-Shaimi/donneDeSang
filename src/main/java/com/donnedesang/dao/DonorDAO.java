@@ -1,4 +1,4 @@
-package com.donnedesang;
+package com.donnedesang.dao;
 
 import com.donnedesang.model.Donor;
 
