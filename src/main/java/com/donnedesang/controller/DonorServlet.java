@@ -4,9 +4,11 @@ import com.donnedesang.model.Donor;
 import com.donnedesang.service.DonorService;
 
 import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
+@WebServlet("/donors")
 
 public class DonorServlet extends HttpServlet {
 
@@ -21,7 +23,7 @@ public class DonorServlet extends HttpServlet {
         request.setAttribute("donors", donors);
 
         // Redirection vers la page JSP d'affichage
-        RequestDispatcher dispatcher = request.getRequestDispatcher("donors.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("view/donors-list");
         dispatcher.forward(request, response);
     }
 
