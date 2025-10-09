@@ -1,9 +1,8 @@
 package com.donnedesang.model;
 
-
 import jakarta.persistence.*;
-
-
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "donors")
@@ -15,15 +14,20 @@ public class Donor {
 
     private String firstName;
     private String lastName;
+    private int age;
     private String cin;
     private String phone;
-    private String bloodGroup; // simple String pour débuter
-    private String status;     // DISPONIBLE, NON_DISPONIBLE, NON_ELIGIBLE
+    private double weight;
+    private String bloodGroup;
+    private String status; // DISPONIBLE, NON_DISPONIBLE, NON_ELIGIBLE
+    private boolean hasContraindications;
+
+    @OneToMany(mappedBy = "donor")
+    private List<Receiver> receivers = new ArrayList<>();
 
     public Donor() {
     }
 
-    // Getters & Setters simples
     public Long getId() {
         return id;
     }
@@ -48,6 +52,14 @@ public class Donor {
         this.lastName = lastName;
     }
 
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
     public String getCin() {
         return cin;
     }
@@ -64,6 +76,14 @@ public class Donor {
         this.phone = phone;
     }
 
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
     public String getBloodGroup() {
         return bloodGroup;
     }
@@ -78,5 +98,21 @@ public class Donor {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public boolean isHasContraindications() {
+        return hasContraindications;
+    }
+
+    public void setHasContraindications(boolean hasContraindications) {
+        this.hasContraindications = hasContraindications;
+    }
+
+    public List<Receiver> getReceivers() {
+        return receivers;
+    }
+
+    public void setReceivers(List<Receiver> receivers) {
+        this.receivers = receivers;
     }
 }
