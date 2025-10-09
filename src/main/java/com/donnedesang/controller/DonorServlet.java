@@ -21,7 +21,7 @@ public class DonorServlet extends HttpServlet {
         request.setAttribute("donors", donors);
 
         // Redirection vers la page JSP d'affichage
-        RequestDispatcher dispatcher = request.getRequestDispatcher("donors.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("view/donors-list");
         dispatcher.forward(request, response);
     }
 
