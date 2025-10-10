@@ -4,11 +4,9 @@ import com.donnedesang.model.Donor;
 import com.donnedesang.service.DonorService;
 
 import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
-@WebServlet("/donors")
 
 public class DonorServlet extends HttpServlet {
 
@@ -19,11 +17,12 @@ public class DonorServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        // Récupérer la liste des donneurs depuis le service
         List<Donor> donors = donorService.getAllDonors();
         request.setAttribute("donors", donors);
 
         // Redirection vers la page JSP d'affichage
-        RequestDispatcher dispatcher = request.getRequestDispatcher("view/donors-list");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/donors-list.jsp");
         dispatcher.forward(request, response);
     }
 
