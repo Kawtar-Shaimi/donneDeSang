@@ -3,7 +3,7 @@
     <class>com.donnedesang.model.Receiver</class>
     <properties>
         <!-- Connexion MySQL -->
-        <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/donnedesang"/>
+        <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/donnedesang"/>
         <property name="javax.persistence.jdbc.user" value="postgres"/>
         <property name="javax.persistence.jdbc.password" value="password"/>
         <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect"/>
