@@ -60,4 +60,12 @@ public class DonorService {
     public List<Donor> getAllDonors() {
         return donorDAO.findAll();
     }
+    public Donor getDonorById(Long id) {
+        return donorDAO.findById(id);
+    }
+
+    public void updateDonor(Donor donor) {
+        donorDAO.update(donor);
+    }
+
 }

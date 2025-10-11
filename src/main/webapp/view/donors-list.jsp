@@ -113,6 +113,7 @@
                     <th class="px-4 py-2 text-left">Âge</th>
                     <th class="px-4 py-2 text-left">Poids</th>
                     <th class="px-4 py-2 text-left">Statut</th>
+                    <th class="px-4 py-2 text-left">Actions</th>
                 </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -140,6 +141,13 @@
                         <span class="text-white text-sm px-3 py-1 rounded-full <%= color %>">
                                     <%= status %>
                                 </span>
+                    </td>
+                    <td class="px-4 py-2">
+                        <form action="${pageContext.request.contextPath}/donors" method="get">
+                            <input type="hidden" name="action" value="edit">
+                            <input type="hidden" name="id" value="<%= d.getId() %>">
+                            <button type="submit" class="text-blue-600 hover:underline">Modifier</button>
+                        </form>
                     </td>
                 </tr>
                 <%
