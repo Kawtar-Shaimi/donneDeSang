@@ -20,7 +20,7 @@ public class ReceiverServlet extends HttpServlet {
         List<Receiver> receivers = receiverDAO.findAll();
         request.setAttribute("receivers", receivers);
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("receivers-list.jsp");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/view/receivers-list.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -32,7 +32,6 @@ public class ReceiverServlet extends HttpServlet {
         Receiver receiver = new Receiver();
         receiver.setFirstName(request.getParameter("firstName"));
         receiver.setLastName(request.getParameter("lastName"));
-        receiver.setEmail(request.getParameter("email"));
         receiver.setPhone(request.getParameter("phone"));
         receiver.setCin(request.getParameter("cin"));
         receiver.setBirthday(request.getParameter("birthday"));
@@ -44,6 +43,8 @@ public class ReceiverServlet extends HttpServlet {
 
         receiverDAO.create(receiver);
 
-        response.sendRedirect("receivers");
+        //  Redirection propre
+        response.sendRedirect(request.getContextPath() + "/receivers");
     }
+
 }
