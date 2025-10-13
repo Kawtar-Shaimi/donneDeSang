@@ -18,7 +18,7 @@
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center py-10">
-
+<%@ include file="navbar.jsp" %>
 <div class="w-full max-w-6xl bg-white rounded-2xl shadow-md p-8">
     <h1 class="text-3xl font-bold text-center text-red-600 mb-8">
         Gestion des Receveurs
