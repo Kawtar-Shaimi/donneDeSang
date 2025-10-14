@@ -18,10 +18,10 @@
                 <a href="${pageContext.request.contextPath}/receivers"
                    class="hover:text-black transition duration-200">Receveurs</a>
             </li>
-            <li>
-                <a href="${pageContext.request.contextPath}/match"
-                   class="hover:text-green-600 transition duration-200">Compatibilité</a>
-            </li>
+<%--            <li>--%>
+<%--                <a href="${pageContext.request.contextPath}/match"--%>
+<%--                   class="hover:text-green-600 transition duration-200">Compatibilité</a>--%>
+<%--            </li>--%>
         </ul>
     </div>
 </nav>
