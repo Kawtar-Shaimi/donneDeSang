@@ -8,6 +8,7 @@
     <persistence-unit name="donnedesangPU" transaction-type="RESOURCE_LOCAL">
         <class>com.donnedesang.model.Donor</class>
         <class>com.donnedesang.model.Receiver</class>
+        <class>com.donnedesang.model.Match</class>
 
         <properties>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/donnedesang"/>

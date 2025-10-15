@@ -23,7 +23,7 @@
 
             <li>
                 <!-- Redirection vers la page d'affichage des compatibilités -->
-                <a href="${pageContext.request.contextPath}/matchView.jsp"
+                <a href="${pageContext.request.contextPath}/match"
                    class="hover:text-green-600 transition duration-200">Compatibilite</a>
             </li>
         </ul>
