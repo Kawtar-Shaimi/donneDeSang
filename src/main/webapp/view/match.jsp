@@ -1,84 +1,78 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
-<html>
+<html lang="fr">
 <head>
-    <title>Compatibilité - Don de Sang</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Matching Donneurs - Receveurs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-100 p-6">
 
-<%@ include file="navbar.jsp" %>
+<div class="container mx-auto">
 
-<div class="max-w-5xl mx-auto mt-10 bg-white shadow-lg rounded-lg p-8">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">
-        Compatibilité pour le receveur :
-        <span class="text-red-600">${receiver.firstName} ${receiver.lastName}</span>
-    </h2>
+    <h1 class="text-3xl font-bold mb-6">Matching Donneurs - Receveurs</h1>
 
-    <div class="bg-gray-100 p-4 rounded-lg mb-8">
-        <p><strong>Groupe sanguin :</strong> ${receiver.bloodGroup}</p>
-        <p><strong>Situation médicale :</strong> ${receiver.medicalStatus}</p>
-        <p><strong>Nombre de poches requises :</strong> ${receiver.requiredBags}</p>
-        <p><strong>Nombre actuel de donneurs :</strong> ${receiver.donors.size()}</p>
-        <p><strong>État :</strong>
-            <span class="${receiver.status == 'SATISFAIT' ? 'text-green-600' : 'text-yellow-600'}">
-                ${receiver.status}
-            </span>
-        </p>
-    </div>
+    <!-- Messages -->
+    <c:if test="${not empty message}">
+        <div class="mb-4 p-4 rounded ${messageType == 'success' ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'}">
+                ${message}
+        </div>
+    </c:if>
 
-    <h3 class="text-xl font-semibold text-gray-700 mb-4">Donneurs compatibles :</h3>
+    <!-- Sélecteur de receveur -->
+    <form method="get" action="match" class="mb-6">
+        <label for="receiverSelect" class="block mb-2 font-semibold">Sélectionner un receveur :</label>
+        <select id="receiverSelect" name="receiverId" class="border rounded p-2 w-full max-w-md">
+            <c:forEach var="receiver" items="${matches.keySet()}">
+                <c:if test="${!receiver.satisfied}">
+                    <option value="${receiver.id}">
+                            ${receiver.firstName} ${receiver.lastName} - ${receiver.needType}
+                    </option>
+                </c:if>
+            </c:forEach>
+        </select>
+        <button type="submit" class="mt-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+            Afficher donneurs compatibles
+        </button>
+    </form>
 
-    <c:choose>
-        <c:when test="${not empty compatibleDonors}">
-            <table class="min-w-full bg-white border border-gray-200">
-                <thead>
-                <tr class="bg-gray-200 text-gray-600 uppercase text-sm">
-                    <th class="py-3 px-4 text-left">Nom</th>
-                    <th class="py-3 px-4 text-left">CIN</th>
-                    <th class="py-3 px-4 text-left">Groupe sanguin</th>
-                    <th class="py-3 px-4 text-left">Poids</th>
-                    <th class="py-3 px-4 text-left">Éligibilité</th>
-                    <th class="py-3 px-4 text-center">Action</th>
+    <!-- Table des donneurs compatibles -->
+    <c:if test="${not empty param.receiverId}">
+        <h2 class="text-xl font-bold mb-4">Donneurs compatibles et disponibles</h2>
+        <table class="min-w-full bg-white border rounded shadow">
+            <thead class="bg-gray-200">
+            <tr>
+                <th class="py-2 px-4 border">Nom</th>
+                <th class="py-2 px-4 border">Groupe sanguin</th>
+                <th class="py-2 px-4 border">Statut</th>
+                <th class="py-2 px-4 border">Poids</th>
+                <th class="py-2 px-4 border">Âge</th>
+                <th class="py-2 px-4 border">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:forEach var="donor" items="${matches[receiverDAO.findById(param.receiverId)]}">
+                <tr class="text-center">
+                    <td class="py-2 px-4 border">${donor.firstName} ${donor.lastName}</td>
+                    <td class="py-2 px-4 border">${donor.bloodGroup}</td>
+                    <td class="py-2 px-4 border">${donor.status}</td>
+                    <td class="py-2 px-4 border">${donor.weight} kg</td>
+                    <td class="py-2 px-4 border">${donor.age}</td>
+                    <td class="py-2 px-4 border">
+                        <form method="post" action="match">
+                            <input type="hidden" name="donorId" value="${donor.id}" />
+                            <input type="hidden" name="receiverId" value="${param.receiverId}" />
+                            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
+                                Associer
+                            </button>
+                        </form>
+                    </td>
                 </tr>
-                </thead>
-                <tbody class="text-gray-700">
-                <c:forEach var="donor" items="${compatibleDonors}">
-                    <tr class="border-b hover:bg-gray-100">
-                        <td class="py-3 px-4">${donor.firstName} ${donor.lastName}</td>
-                        <td class="py-3 px-4">${donor.cin}</td>
-                        <td class="py-3 px-4">${donor.bloodGroup}</td>
-                        <td class="py-3 px-4">${donor.weight} kg</td>
-                        <td class="py-3 px-4">
-                            <c:choose>
-                                <c:when test="${!donor.hasContraindications && donor.status == 'DISPONIBLE'}">
-                                    <span class="text-green-600 font-semibold">Éligible</span>
-                                </c:when>
-                                <c:otherwise>
-                                    <span class="text-red-600 font-semibold">Non éligible</span>
-                                </c:otherwise>
-                            </c:choose>
-                        </td>
-                        <td class="py-3 px-4 text-center">
-                            <form action="${pageContext.request.contextPath}/match" method="post">
-                                <input type="hidden" name="donorId" value="${donor.id}">
-                                <input type="hidden" name="receiverId" value="${receiver.id}">
-                                <button type="submit"
-                                        class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition">
-                                    Associer
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
-        </c:when>
-        <c:otherwise>
-            <p class="text-gray-600">Aucun donneur compatible trouvé pour ce receveur.</p>
-        </c:otherwise>
-    </c:choose>
+            </c:forEach>
+            </tbody>
+        </table>
+    </c:if>
+
 </div>
 
 </body>
