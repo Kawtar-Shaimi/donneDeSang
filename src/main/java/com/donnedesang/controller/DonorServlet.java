@@ -50,7 +50,6 @@ public class DonorServlet extends HttpServlet {
             donor.setPhone(request.getParameter("phone"));
             donor.setBloodGroup(request.getParameter("bloodGroup"));
 
-            // Vérifie que les champs numériques sont bien fournis
             String ageParam = request.getParameter("age");
             String weightParam = request.getParameter("weight");
 
@@ -61,48 +60,38 @@ public class DonorServlet extends HttpServlet {
                 donor.setWeight(Double.parseDouble(weightParam));
             }
 
+            donor.setHasContraindications(
+                    "yes".equalsIgnoreCase(request.getParameter("hasContraindications"))
+            );
+
             donorService.updateDonor(donor);
             response.sendRedirect("donors");
 
         } else {
-            // Ajout d’un nouveau donneur — avec vérification
-            String firstName = request.getParameter("firstName");
-            String lastName = request.getParameter("lastName");
-            String cin = request.getParameter("cin");
-            String phone = request.getParameter("phone");
-            String bloodGroup = request.getParameter("bloodGroup");
+            // Ajout d’un nouveau donneur
+            Donor donor = new Donor();
+            donor.setFirstName(request.getParameter("firstName"));
+            donor.setLastName(request.getParameter("lastName"));
+            donor.setCin(request.getParameter("cin"));
+            donor.setPhone(request.getParameter("phone"));
+            donor.setBloodGroup(request.getParameter("bloodGroup"));
+
             String ageParam = request.getParameter("age");
             String weightParam = request.getParameter("weight");
 
-            // Vérifie que le formulaire n’est pas vide
-            if (firstName != null && !firstName.isEmpty()
-                    && lastName != null && !lastName.isEmpty()
-                    && cin != null && !cin.isEmpty()
-                    && phone != null && !phone.isEmpty()
-                    && bloodGroup != null && !bloodGroup.isEmpty()) {
-
-                Donor donor = new Donor();
-                donor.setFirstName(firstName);
-                donor.setLastName(lastName);
-                donor.setCin(cin);
-                donor.setPhone(phone);
-                donor.setBloodGroup(bloodGroup);
-
-                if (ageParam != null && !ageParam.isEmpty()) {
-                    donor.setAge(Integer.parseInt(ageParam));
-                }
-                if (weightParam != null && !weightParam.isEmpty()) {
-                    donor.setWeight(Double.parseDouble(weightParam));
-                }
-
-                donor.setHasContraindications(
-                        "yes".equalsIgnoreCase(request.getParameter("hasContraindications"))
-                );
-
-                donorService.updateDonorStatus(donor);
+            if (ageParam != null && !ageParam.isEmpty()) {
+                donor.setAge(Integer.parseInt(ageParam));
+            }
+            if (weightParam != null && !weightParam.isEmpty()) {
+                donor.setWeight(Double.parseDouble(weightParam));
             }
 
-            // Redirection dans tous les cas
+            donor.setHasContraindications(
+                    "yes".equalsIgnoreCase(request.getParameter("hasContraindications"))
+            );
+
+            donorService.updateDonor(donor); // ← corrigé ici
+
             response.sendRedirect("donors");
         }
     }

@@ -2,83 +2,59 @@ package com.donnedesang.controller;
 
 import com.donnedesang.model.Donor;
 import com.donnedesang.model.Receiver;
+import com.donnedesang.service.DonorService;
 import com.donnedesang.service.MatchService;
-import com.donnedesang.dao.DonorDAO;
-import com.donnedesang.dao.ReceiverDAO;
+import com.donnedesang.service.ReceiverService;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
-import java.util.List;
 
+@WebServlet("/match")
 public class MatchServlet extends HttpServlet {
 
-    private MatchService matchService;
-    private DonorDAO donorDAO;
-    private ReceiverDAO receiverDAO;
+    private DonorService donorService = new DonorService();
+    private ReceiverService receiverService = new ReceiverService();
+    private MatchService matchService = new MatchService();
 
-    @Override
-    public void init() throws ServletException {
-        matchService = new MatchService();
-        donorDAO = new DonorDAO();
-        receiverDAO = new ReceiverDAO();
-    }
-
-    // Afficher la page de matching
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Receveurs non satisfaits triés par priorité
-        List<Receiver> receivers = receiverDAO.findAll(); // Tu peux filtrer les SATISFIED si tu veux
+        // Récupérer les IDs depuis les paramètres
+        String donorIdParam = request.getParameter("donorId");
+        String receiverIdParam = request.getParameter("receiverId");
 
-        // Donneurs disponibles
-        List<Donor> donors = donorDAO.findAll(); // tu peux filtrer DISPONIBLE si tu veux
+        if (donorIdParam != null && receiverIdParam != null) {
+            Long donorId = Long.parseLong(donorIdParam);
+            Long receiverId = Long.parseLong(receiverIdParam);
 
-        // Attribuer les listes à la requête pour JSP
-        request.setAttribute("receivers", receivers);
-        request.setAttribute("donors", donors);
-
-        request.getRequestDispatcher("match.jsp").forward(request, response);
-    }
-
-    // Associer un donneur à un receveur
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        request.setCharacterEncoding("UTF-8");
-
-        String donorParam = request.getParameter("donorId");
-        String receiverParam = request.getParameter("receiverId");
-
-        if (donorParam == null || receiverParam == null) {
-            response.sendRedirect(request.getContextPath() + "/match");
-            return;
-        }
-
-        try {
-            Long donorId = Long.parseLong(donorParam);
-            Long receiverId = Long.parseLong(receiverParam);
-
-            Donor donor = donorDAO.findById(donorId);
-            Receiver receiver = receiverDAO.findById(receiverId);
+            // Obtenir les objets directement depuis les services
+            Donor donor = donorService.getDonorById(donorId);
+            Receiver receiver = receiverService.getReceiverById(receiverId);
 
             if (donor != null && receiver != null) {
-                boolean success = matchService.assignDonorToReceiver(donor, receiver);
+                // Faire le match
+                matchService.matchDonorToReceiver(donor, receiver);
 
-                if (success) {
-                    request.getSession().setAttribute("message", "✅ Donneur associé avec succès !");
-                } else {
-                    request.getSession().setAttribute("message", "⚠️ Impossible d'associer ce donneur.");
-                }
+                // Ajouter le donneur à la liste du receveur
+                receiver.addDonor(donor);
+
+                // Mettre à jour le receveur et le donneur
+                receiverService.updateReceiver(receiver);
+                donorService.updateDonor(donor);
+
+                request.setAttribute("message", "Le donateur a été assigné avec succès au receveur !");
+            } else {
+                request.setAttribute("message", "Donneur ou receveur introuvable.");
             }
-
-            response.sendRedirect(request.getContextPath() + "/match?receiverId=" + receiverId);
-
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/match");
         }
+
+        // Rediriger ou afficher la page de match
+        request.getRequestDispatcher("/match.jsp").forward(request, response);
     }
 }

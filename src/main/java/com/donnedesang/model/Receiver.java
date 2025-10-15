@@ -14,16 +14,17 @@ public class Receiver {
 
     private String firstName;
     private String lastName;
-    private String email;
+    private String bloodGroup;
+    private String needType; // NORMAL, URGENT, CRITIQUE
+
     private String phone;
     private String cin;
     private String birthday;
     private String sexe;
-    private String bloodGroup;
-    private String needType; // NORMAL, URGENT, CRITIQUE
-    private boolean satisfied = false;
 
-    // Nouvelle relation : un receveur peut avoir plusieurs donneurs
+    @Enumerated(EnumType.STRING)
+    private ReceiverState state = ReceiverState.EN_ATTENTE;
+
     @ManyToMany
     @JoinTable(
             name = "receiver_donor",
@@ -32,7 +33,15 @@ public class Receiver {
     )
     private List<Donor> donors = new ArrayList<>();
 
+    // ===== Constructeurs =====
     public Receiver() {}
+
+    public Receiver(String firstName, String lastName, String bloodGroup, String needType) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.bloodGroup = bloodGroup;
+        this.needType = needType;
+    }
 
     // ===== Getters / Setters =====
     public Long getId() { return id; }
@@ -44,8 +53,11 @@ public class Receiver {
     public String getLastName() { return lastName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getBloodGroup() { return bloodGroup; }
+    public void setBloodGroup(String bloodGroup) { this.bloodGroup = bloodGroup; }
+
+    public String getNeedType() { return needType; }
+    public void setNeedType(String needType) { this.needType = needType; }
 
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
@@ -59,31 +71,48 @@ public class Receiver {
     public String getSexe() { return sexe; }
     public void setSexe(String sexe) { this.sexe = sexe; }
 
-    public String getBloodGroup() { return bloodGroup; }
-    public void setBloodGroup(String bloodGroup) { this.bloodGroup = bloodGroup; }
+    public ReceiverState getState() { return state; }
 
-    public String getNeedType() { return needType; }
-    public void setNeedType(String needType) { this.needType = needType; }
-
-    public boolean isSatisfied() { return satisfied; }
-    public void setSatisfied(boolean satisfied) { this.satisfied = satisfied; }
+    // Méthode pour compatibilité avec setSatisfied(boolean)
+    public void setSatisfied(boolean satisfied) {
+        this.state = satisfied ? ReceiverState.SATISFAIT : ReceiverState.EN_ATTENTE;
+    }
 
     public List<Donor> getDonors() { return donors; }
 
-    // Ajouter un donneur
+    // ===== Méthodes métiers =====
     public void addDonor(Donor donor) {
-        if (!donors.contains(donor)) {
+        if (!donors.contains(donor) && !isSatisfied()) {
             donors.add(donor);
+            if (donors.size() >= getRequiredPouches()) {
+                state = ReceiverState.SATISFAIT;
+            }
         }
+    }
+
+    public boolean isSatisfied() {
+        return state == ReceiverState.SATISFAIT;
     }
 
     // Retourne le nombre de poches nécessaires selon le besoin
     public int getRequiredPouches() {
-        switch (needType) {
-            case "CRITIQUE": return 4;
-            case "URGENT": return 3;
-            case "NORMAL": return 1;
-            default: return 1;
+        return switch (needType) {
+            case "CRITIQUE" -> 4;
+            case "URGENT" -> 3;
+            default -> 1;
+        };
+    }
+
+    public Donor getDonor() {
+        if (!donors.isEmpty()) {
+            return donors.get(0);
         }
+        return null;
+    }
+
+    // ===== Enum pour l'état =====
+    public enum ReceiverState {
+        EN_ATTENTE,
+        SATISFAIT
     }
 }

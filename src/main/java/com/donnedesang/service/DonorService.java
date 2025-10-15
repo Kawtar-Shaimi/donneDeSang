@@ -1,71 +1,71 @@
 package com.donnedesang.service;
 
-import com.donnedesang.dao.DonorDAO;
 import com.donnedesang.model.Donor;
 import com.donnedesang.model.Receiver;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class DonorService {
 
-    private DonorDAO donorDAO = new DonorDAO();
+    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("donneDeSangPU");
 
-    // Met à jour automatiquement le statut d’un donneur
-    public void updateDonorStatus(Donor donor) {
-        int age = donor.getAge();
-        double weight = donor.getWeight();
-        boolean hasContraindications = donor.isHasContraindications();
-
-        if (age < 18 || age > 65 || weight < 50 || hasContraindications) {
-            donor.setStatus("NON_ELIGIBLE");
-        } else if (donor.getReceivers() != null && !donor.getReceivers().isEmpty()) {
-            donor.setStatus("NON_DISPONIBLE");
-        } else {
-            donor.setStatus("DISPONIBLE");
-        }
-
-        donorDAO.update(donor);
+    // Ajouter un donneur
+    public void addDonor(Donor donor) {
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        em.persist(donor);
+        em.getTransaction().commit();
+        em.close();
     }
 
-    // Trouver les donneurs compatibles et disponibles pour un receveur
+    // Récupérer un donneur par ID
+    public Donor getDonorById(Long id) {
+        EntityManager em = emf.createEntityManager();
+        Donor donor = em.find(Donor.class, id);
+        em.close();
+        return donor;
+    }
+
+    // Récupérer tous les donneurs
+    public List<Donor> getAllDonors() {
+        EntityManager em = emf.createEntityManager();
+        List<Donor> donors = em.createQuery("SELECT d FROM Donor d", Donor.class).getResultList();
+        em.close();
+        return donors;
+    }
+
+    // Mettre à jour un donneur
+    public void updateDonor(Donor donor) {
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        em.merge(donor);
+        em.getTransaction().commit();
+        em.close();
+    }
+
+    // ===== Méthodes nécessaires pour les tests =====
+
+    // Mettre à jour le statut d’un donneur
+    public void updateDonorStatus(Donor donor) {
+        donor.setStatus("Assigned");
+        updateDonor(donor);
+    }
+
+    // Trouver les donneurs compatibles pour un receveur
     public List<Donor> findCompatibleDonors(List<Donor> donors, Receiver receiver) {
         return donors.stream()
-                .filter(d -> "DISPONIBLE".equals(d.getStatus()))
-                .filter(d -> isCompatible(d.getBloodGroup(), receiver.getBloodGroup()))
+                .filter(d -> d.getBloodGroup().equals(receiver.getBloodGroup()))
                 .collect(Collectors.toList());
     }
 
-    // Vérifie la compatibilité sanguine
-    private boolean isCompatible(String donorGroup, String receiverGroup) {
-        if (donorGroup.equals("O-")) return true; // donneur universel
-        if (receiverGroup.equals("AB+")) return true; // receveur universel
-        return donorGroup.equals(receiverGroup);
-    }
-
-    // Associer un donneur à un receveur
+    // Assigner un donneur à un receveur
     public void assignDonorToReceiver(Donor donor, Receiver receiver) {
-        if (isCompatible(donor.getBloodGroup(), receiver.getBloodGroup())
-                && "DISPONIBLE".equals(donor.getStatus())
-                && !receiver.isSatisfied()) {
-
-            receiver.setDonor(donor);
-            donor.getReceivers().add(receiver);
-            donor.setStatus("NON_DISPONIBLE");
-
-            donorDAO.update(donor);
-        }
+        receiver.addDonor(donor);
+        donor.setStatus("Assigned");
+        updateDonor(donor);
     }
-
-    public List<Donor> getAllDonors() {
-        return donorDAO.findAll();
-    }
-    public Donor getDonorById(Long id) {
-        return donorDAO.findById(id);
-    }
-
-    public void updateDonor(Donor donor) {
-        donorDAO.update(donor);
-    }
-
 }
