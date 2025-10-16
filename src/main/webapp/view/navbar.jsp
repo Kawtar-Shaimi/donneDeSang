@@ -10,18 +10,22 @@
                 <a href="${pageContext.request.contextPath}/index.jsp"
                    class="hover:text-black transition duration-200">Accueil</a>
             </li>
+
             <li>
                 <a href="${pageContext.request.contextPath}/donors"
                    class="hover:text-black transition duration-200">Donneurs</a>
             </li>
+
             <li>
                 <a href="${pageContext.request.contextPath}/receivers"
                    class="hover:text-black transition duration-200">Receveurs</a>
             </li>
-<%--            <li>--%>
-<%--                <a href="${pageContext.request.contextPath}/match"--%>
-<%--                   class="hover:text-green-600 transition duration-200">Compatibilité</a>--%>
-<%--            </li>--%>
+
+            <li>
+                <!-- Redirection vers la page d'affichage des compatibilités -->
+                <a href="${pageContext.request.contextPath}/match"
+                   class="hover:text-green-600 transition duration-200">Compatibilite</a>
+            </li>
         </ul>
     </div>
 </nav>

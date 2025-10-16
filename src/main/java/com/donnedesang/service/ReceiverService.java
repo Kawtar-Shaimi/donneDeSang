@@ -1,48 +1,42 @@
 package com.donnedesang.service;
 
 import com.donnedesang.model.Receiver;
-import com.donnedesang.model.Donor;
-
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ReceiverService {
 
-    // Calcul du nombre de poches nécessaires selon le type de besoin
-    public int getRequiredBags(Receiver receiver) {
-        String needType = receiver.getNeedType();
+    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("donnedesangPU");
 
-        if ("CRITIQUE".equalsIgnoreCase(needType)) {
-            return 4;
-        } else if ("URGENT".equalsIgnoreCase(needType)) {
-            return 3;
-        } else {
-            return 1; // NORMAL ou par défaut
-        }
+    public void addReceiver(Receiver receiver) {
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        em.persist(receiver);
+        em.getTransaction().commit();
+        em.close();
     }
 
-    // Vérifie si le receveur est satisfait
-    public boolean isSatisfied(Receiver receiver) {
-        return receiver.isSatisfied();
+    public Receiver getReceiverById(Long id) {
+        EntityManager em = emf.createEntityManager();
+        Receiver receiver = em.find(Receiver.class, id);
+        em.close();
+        return receiver;
     }
 
-    // Met à jour le statut de satisfaction
-    public void markAsSatisfied(Receiver receiver) {
-        receiver.setSatisfied(true);
+    public List<Receiver> getAllReceivers() {
+        EntityManager em = emf.createEntityManager();
+        List<Receiver> receivers = em.createQuery("SELECT r FROM Receiver r", Receiver.class).getResultList();
+        em.close();
+        return receivers;
     }
 
-    // Filtrer les receveurs non satisfaits
-    public List<Receiver> filterPendingReceivers(List<Receiver> receivers) {
-        return receivers.stream()
-                .filter(r -> !r.isSatisfied())
-                .collect(Collectors.toList());
-    }
-
-    // Associer un donneur à un receveur (si compatible)
-    public void assignDonorIfCompatible(Donor donor, Receiver receiver) {
-        if (donor.getBloodGroup().equals(receiver.getBloodGroup()) || donor.getBloodGroup().equals("O-")) {
-            receiver.setDonor(donor);
-            receiver.setSatisfied(true);
-        }
+    public void updateReceiver(Receiver receiver) {
+        EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
+        em.merge(receiver);
+        em.getTransaction().commit();
+        em.close();
     }
 }

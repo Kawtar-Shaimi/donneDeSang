@@ -1,110 +1,56 @@
 package com.donnedesang.service;
 
 import com.donnedesang.model.Donor;
-import com.donnedesang.model.Receiver;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DonorServiceTest {
+class DonorServiceTest {
 
     private DonorService donorService;
+    private Donor testDonor;
 
     @BeforeEach
     void setUp() {
         donorService = new DonorService();
+        testDonor = new Donor();
+        testDonor.setFirstName("John");
+        testDonor.setLastName("Doe");
+        testDonor.setCin("123456");
+        testDonor.setPhone("0123456789");
+        testDonor.setBloodGroup("A+");
+        testDonor.setAge(30);
+        testDonor.setWeight(70.0);
+
+        donorService.addDonor(testDonor);
     }
 
-    // 🧪 Test 1 : Donneur éligible
-    @Test
-    void testUpdateDonorStatus_Eligible() {
-        Donor donor = new Donor();
-        donor.setAge(25);
-        donor.setWeight(70);
-        donor.setHasContraindications(false);
-        donor.setReceivers(new ArrayList<>());
-
-        donorService.updateDonorStatus(donor);
-
-        assertEquals("DISPONIBLE", donor.getStatus(),
-                "Le donneur doit être marqué comme DISPONIBLE");
+    @AfterEach
+    void tearDown() {
+        // Optionnel : supprimer testDonor pour garder la DB propre
     }
 
-    // 🧪 Test 2 : Donneur non éligible (trop jeune)
     @Test
-    void testUpdateDonorStatus_NotEligible_YoungAge() {
-        Donor donor = new Donor();
-        donor.setAge(16);
-        donor.setWeight(60);
-        donor.setHasContraindications(false);
-
-        donorService.updateDonorStatus(donor);
-
-        assertEquals("NON_ELIGIBLE", donor.getStatus(),
-                "Le donneur doit être NON_ELIGIBLE s'il a moins de 18 ans");
+    void testGetDonorById() {
+        Donor donor = donorService.getDonorById(testDonor.getId());
+        assertNotNull(donor);
+        assertEquals("John", donor.getFirstName());
     }
 
-    // 🧪 Test 3 : Donneur avec un receveur assigné
     @Test
-    void testUpdateDonorStatus_NotDisponible() {
-        Donor donor = new Donor();
-        donor.setAge(30);
-        donor.setWeight(70);
-        donor.setHasContraindications(false);
-
-        List<Receiver> receivers = new ArrayList<>();
-        receivers.add(new Receiver());
-        donor.setReceivers(receivers);
-
-        donorService.updateDonorStatus(donor);
-
-        assertEquals("NON_DISPONIBLE", donor.getStatus(),
-                "Le donneur doit être NON_DISPONIBLE s'il a déjà un receveur");
+    void testGetAllDonors() {
+        List<Donor> donors = donorService.getAllDonors();
+        assertTrue(donors.size() > 0);
     }
 
-    // 🧪 Test 4 : Trouver les donneurs compatibles
     @Test
-    void testFindCompatibleDonors() {
-        Receiver receiver = new Receiver();
-        receiver.setBloodGroup("A+");
+    void testUpdateDonor() {
+        testDonor.setPhone("0987654321");
+        donorService.updateDonor(testDonor);
 
-        Donor d1 = new Donor();
-        d1.setBloodGroup("A+");
-        d1.setStatus("DISPONIBLE");
-
-        Donor d2 = new Donor();
-        d2.setBloodGroup("B+");
-        d2.setStatus("DISPONIBLE");
-
-        List<Donor> donors = List.of(d1, d2);
-
-        List<Donor> compatibles = donorService.findCompatibleDonors(donors, receiver);
-
-        assertEquals(1, compatibles.size(), "Il ne doit y avoir qu’un seul donneur compatible");
-        assertEquals("A+", compatibles.get(0).getBloodGroup());
-    }
-
-    // 🧪 Test 5 : Associer un donneur compatible à un receveur
-    @Test
-    void testAssignDonorToReceiver_Success() {
-        Donor donor = new Donor();
-        donor.setBloodGroup("O-");
-        donor.setStatus("DISPONIBLE");
-        donor.setReceivers(new ArrayList<>());
-
-        Receiver receiver = new Receiver();
-        receiver.setBloodGroup("A+");
-        receiver.setSatisfied(false);
-
-        donorService.assignDonorToReceiver(donor, receiver);
-
-        assertEquals(donor, receiver.getDonor(),
-                "Le receveur doit être associé au donneur");
-        assertEquals("NON_DISPONIBLE", donor.getStatus(),
-                "Le donneur devient NON_DISPONIBLE après l’attribution");
+        Donor updatedDonor = donorService.getDonorById(testDonor.getId());
+        assertEquals("0987654321", updatedDonor.getPhone());
     }
 }

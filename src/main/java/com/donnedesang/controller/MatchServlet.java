@@ -2,52 +2,58 @@ package com.donnedesang.controller;
 
 import com.donnedesang.model.Donor;
 import com.donnedesang.model.Receiver;
-import com.donnedesang.dao.DonorDAO;
-import com.donnedesang.dao.ReceiverDAO;
 import com.donnedesang.service.DonorService;
+import com.donnedesang.service.MatchService;
+import com.donnedesang.service.ReceiverService;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
-import java.util.List;
 
 public class MatchServlet extends HttpServlet {
 
     private DonorService donorService = new DonorService();
-    private DonorDAO donorDAO = new DonorDAO();
-    private ReceiverDAO receiverDAO = new ReceiverDAO();
+    private ReceiverService receiverService = new ReceiverService();
+    private MatchService matchService = new MatchService();
 
-    // 👉 Associer un donneur à un receveur
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        Long donorId = Long.parseLong(request.getParameter("donorId"));
-        Long receiverId = Long.parseLong(request.getParameter("receiverId"));
-
-        Donor donor = donorDAO.findById(donorId);
-        Receiver receiver = receiverDAO.findById(receiverId);
-
-        donorService.assignDonorToReceiver(donor, receiver);
-
-        response.sendRedirect("receivers");
-    }
-
-    // 👉 Afficher les donneurs compatibles pour un receveur donné
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        Long receiverId = Long.parseLong(request.getParameter("receiverId"));
-        Receiver receiver = receiverDAO.findById(receiverId);
+        // Récupérer les IDs depuis les paramètres
+        String donorIdParam = request.getParameter("donorId");
+        String receiverIdParam = request.getParameter("receiverId");
 
-        List<Donor> donors = donorDAO.findAll();
-        List<Donor> compatibleDonors = donorService.findCompatibleDonors(donors, receiver);
+        if (donorIdParam != null && receiverIdParam != null) {
+            Long donorId = Long.parseLong(donorIdParam);
+            Long receiverId = Long.parseLong(receiverIdParam);
 
-        request.setAttribute("receiver", receiver);
-        request.setAttribute("compatibleDonors", compatibleDonors);
+            // Obtenir les objets directement depuis les services
+            Donor donor = donorService.getDonorById(donorId);
+            Receiver receiver = receiverService.getReceiverById(receiverId);
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("match.jsp");
-        dispatcher.forward(request, response);
+            if (donor != null && receiver != null) {
+                // Faire le match
+                matchService.matchDonorToReceiver(donor, receiver);
+
+                // Ajouter le donneur à la liste du receveur
+                receiver.addDonor(donor);
+
+                // Mettre à jour le receveur et le donneur
+                receiverService.updateReceiver(receiver);
+                donorService.updateDonor(donor);
+
+                request.setAttribute("message", "Le donateur a été assigné avec succès au receveur !");
+            } else {
+                request.setAttribute("message", "Donneur ou receveur introuvable.");
+            }
+        }
+
+        // Rediriger ou afficher la page de match
+        request.getRequestDispatcher("/view/match.jsp").forward(request, response);
     }
 }
