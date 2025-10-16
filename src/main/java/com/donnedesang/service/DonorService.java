@@ -11,16 +11,27 @@ import java.util.stream.Collectors;
 
 public class DonorService {
 
-    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("donneDeSangPU");
+    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("donnedesangPU");
 
     // Ajouter un donneur
     public void addDonor(Donor donor) {
+        // 🔹 Déterminer le statut selon les conditions
+        if (donor.getAge() < 18 || donor.getAge() > 65 || donor.getWeight() < 50) {
+            donor.setStatus("NON_ELIGIBLE");
+        } else if (donor.isHasContraindications()) {
+            donor.setStatus("NON_DISPONIBLE");
+        } else {
+            donor.setStatus("DISPONIBLE");
+        }
+
+        // 🔹 Sauvegarde dans la base
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
         em.persist(donor);
         em.getTransaction().commit();
         em.close();
     }
+
 
     // Récupérer un donneur par ID
     public Donor getDonorById(Long id) {

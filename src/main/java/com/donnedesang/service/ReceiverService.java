@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ReceiverService {
 
-    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("donneDeSangPU");
+    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("donnedesangPU");
 
     public void addReceiver(Receiver receiver) {
         EntityManager em = emf.createEntityManager();

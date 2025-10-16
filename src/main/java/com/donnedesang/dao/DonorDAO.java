@@ -11,7 +11,7 @@ import java.util.Optional;
 public class DonorDAO {
 
     private static final EntityManagerFactory emf =
-            Persistence.createEntityManagerFactory("donneDeSangPU");
+            Persistence.createEntityManagerFactory("donnedesangPU");
 
     public List<Donor> findAll() {
         EntityManager em = emf.createEntityManager();

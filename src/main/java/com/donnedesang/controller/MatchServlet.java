@@ -14,7 +14,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet("/match")
 public class MatchServlet extends HttpServlet {
 
     private DonorService donorService = new DonorService();
@@ -55,6 +54,6 @@ public class MatchServlet extends HttpServlet {
         }
 
         // Rediriger ou afficher la page de match
-        request.getRequestDispatcher("/match.jsp").forward(request, response);
+        request.getRequestDispatcher("/view/match.jsp").forward(request, response);
     }
 }
