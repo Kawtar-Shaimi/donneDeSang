@@ -1,46 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
-         http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
-         version="4.0">
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+         version="5.0">
 
-    <!-- Configuration globale du projet -->
-    <display-name>Don de Sang</display-name>
+    <display-name>donnedesang</display-name>
 
-    <!-- ==================== DonorServlet ==================== -->
-    <servlet>
-        <servlet-name>DonorServlet</servlet-name>
-        <servlet-class>com.donnedesang.controller.DonorServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>DonorServlet</servlet-name>
-        <url-pattern>/donors</url-pattern>
-    </servlet-mapping>
-
-    <!-- ==================== ReceiverServlet ==================== -->
-    <servlet>
-        <servlet-name>ReceiverServlet</servlet-name>
-        <servlet-class>com.donnedesang.controller.ReceiverServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ReceiverServlet</servlet-name>
-        <url-pattern>/receivers</url-pattern>
-    </servlet-mapping>
-
-    <!-- ==================== MatchServlet ==================== -->
-    <servlet>
-        <servlet-name>MatchServlet</servlet-name>
-        <servlet-class>com.donnedesang.controller.MatchServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>MatchServlet</servlet-name>
-        <url-pattern>/match</url-pattern>
-    </servlet-mapping>
-
-    <!-- ==================== Page d'accueil ==================== -->
+    <!-- Page d’accueil -->
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
+
+    <!-- Mapping du DonneurServlet -->
+    <servlet>
+        <servlet-name>DonneurServlet</servlet-name>
+        <servlet-class>com.donnedesang.controller.DonneurServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>DonneurServlet</servlet-name>
+        <url-pattern>/donneurs</url-pattern>
+    </servlet-mapping>
+
+    <!-- Mapping du ReceveurServlet -->
+    <servlet>
+        <servlet-name>ReceveurServlet</servlet-name>
+        <servlet-class>com.donnedesang.controller.ReceveurServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ReceveurServlet</servlet-name>
+        <url-pattern>/receveurs</url-pattern>
+    </servlet-mapping>
 
 </web-app>
