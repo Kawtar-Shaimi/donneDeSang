@@ -8,7 +8,7 @@
 </head>
 <body class="bg-gray-50 text-gray-800">
 
-<jsp:include page="includes/navbar.jsp"/>
+<jsp:include page="view/navbar.jsp"/>
 
 <section class="flex flex-col items-center justify-center text-center py-24 px-6">
     <h1 class="text-5xl font-extrabold text-red-700 mb-6">
