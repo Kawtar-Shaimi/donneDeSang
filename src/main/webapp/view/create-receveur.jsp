@@ -8,7 +8,7 @@
 </head>
 <body class="bg-gray-50">
 
-<jsp:include page="includes/navbar.jsp"/>
+<jsp:include page="navbar.jsp"/>
 
 <div class="max-w-3xl mx-auto mt-10 bg-white p-8 rounded-lg shadow-lg">
     <h2 class="text-3xl font-bold text-red-700 mb-6 text-center">💉 Ajouter un Receveur</h2>

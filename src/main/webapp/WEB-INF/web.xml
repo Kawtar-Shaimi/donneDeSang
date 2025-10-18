@@ -6,12 +6,11 @@
 
     <display-name>donnedesang</display-name>
 
-    <!-- Page d’accueil -->
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
 
-    <!-- Mapping du DonneurServlet -->
+    <!-- Mapping DonneurServlet -->
     <servlet>
         <servlet-name>DonneurServlet</servlet-name>
         <servlet-class>com.donnedesang.controller.DonneurServlet</servlet-class>
@@ -19,10 +18,10 @@
 
     <servlet-mapping>
         <servlet-name>DonneurServlet</servlet-name>
-        <url-pattern>/donneurs</url-pattern>
+        <url-pattern>/donors</url-pattern>
     </servlet-mapping>
 
-    <!-- Mapping du ReceveurServlet -->
+    <!-- Mapping ReceveurServlet -->
     <servlet>
         <servlet-name>ReceveurServlet</servlet-name>
         <servlet-class>com.donnedesang.controller.ReceveurServlet</servlet-class>
