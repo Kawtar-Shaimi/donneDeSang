@@ -10,6 +10,16 @@
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
 
+    <servlet>
+        <servlet-name>MatchServlet</servlet-name>
+        <servlet-class>com.donnedesang.controller.MatchServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>MatchServlet</servlet-name>
+        <url-pattern>/match</url-pattern>
+    </servlet-mapping>
+
     <!-- Mapping DonneurServlet -->
     <servlet>
         <servlet-name>DonneurServlet</servlet-name>

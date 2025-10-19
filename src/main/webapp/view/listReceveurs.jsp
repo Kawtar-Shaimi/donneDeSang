@@ -6,6 +6,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gradient-to-r from-blue-100 via-blue-200 to-blue-300 min-h-screen p-8">
+
 <h1 class="text-4xl font-bold text-center text-blue-800 mb-8">Liste des Receveurs</h1>
 
 <table class="min-w-full bg-white rounded-xl shadow-lg overflow-hidden">

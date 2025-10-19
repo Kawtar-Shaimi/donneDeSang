@@ -3,10 +3,10 @@
         ❤️ Don de Sang
     </div>
     <ul class="flex space-x-6 text-lg">
-        <li><a href="../index.jsp" class="hover:text-gray-200">Accueil</a></li>
-        <li><a href="view/create-donneur.jsp" class="hover:text-gray-200">Ajouter Donneur</a></li>
-        <li><a href="create-receveur.jsp" class="hover:text-gray-200">Ajouter Receveur</a></li>
-        <li><a href="donors" class="hover:text-gray-200">Liste Donneurs</a></li>
-        <li><a href="receveurs" class="hover:text-gray-200">Liste Receveurs</a></li>
+        <li><a href="${pageContext.request.contextPath}/index.jsp" class="hover:text-gray-200">Accueil</a></li>
+        <li><a href="${pageContext.request.contextPath}/view/create-donneur.jsp" class="hover:text-gray-200">Ajouter Donneur</a></li>
+        <li><a href="${pageContext.request.contextPath}/view/create-receveur.jsp" class="hover:text-gray-200">Ajouter Receveur</a></li>
+        <li><a href="${pageContext.request.contextPath}/donors" class="hover:text-gray-200">Liste Donneurs</a></li>
+        <li><a href="${pageContext.request.contextPath}/receveurs" class="hover:text-gray-200">Liste Receveurs</a></li>
     </ul>
 </nav>

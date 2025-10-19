@@ -53,7 +53,7 @@ public class ReceveurService {
             // Donneur becomes non available
             d.setStatut(com.donnedesang.model.StatutDisponibilite.NON_DISPONIBLE);
             // persist changes: update via DAO
-            // use DAOs directly (simple)
+              // use DAOs directly (simple)
             new com.donnedesang.dao.DonneurDAO().update(d);
             new com.donnedesang.dao.ReceveurDAO().update(r);
         }

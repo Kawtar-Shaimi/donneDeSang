@@ -6,6 +6,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gradient-to-r from-red-100 via-red-200 to-red-300 min-h-screen p-8">
+
 <h1 class="text-4xl font-bold text-center text-red-800 mb-8">Liste des Donneurs</h1>
 
 <table class="min-w-full bg-white rounded-xl shadow-lg overflow-hidden">
