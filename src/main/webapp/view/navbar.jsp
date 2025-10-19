@@ -8,5 +8,6 @@
         <li><a href="${pageContext.request.contextPath}/view/create-receveur.jsp" class="hover:text-gray-200">Ajouter Receveur</a></li>
         <li><a href="${pageContext.request.contextPath}/donors" class="hover:text-gray-200">Liste Donneurs</a></li>
         <li><a href="${pageContext.request.contextPath}/receveurs" class="hover:text-gray-200">Liste Receveurs</a></li>
+        <li><a href="${pageContext.request.contextPath}/match" class="hover:text-gray-200">Matching</a></li>
     </ul>
 </nav>

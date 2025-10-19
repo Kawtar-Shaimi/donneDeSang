@@ -47,8 +47,9 @@ public class Receveur {
     @Column(nullable = false)
     private boolean satisfait = false;
 
-    @OneToMany(mappedBy = "receveur")
+    @OneToMany(mappedBy = "receveur", fetch = FetchType.EAGER)
     private List<Donneur> donneurs = new ArrayList<>();
+
 
     public Receveur() {}
 

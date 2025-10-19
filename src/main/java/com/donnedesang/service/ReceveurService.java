@@ -1,9 +1,11 @@
 package com.donnedesang.service;
 
+import com.donnedesang.dao.DonneurDAO;
 import com.donnedesang.dao.ReceveurDAO;
 import com.donnedesang.model.Donneur;
 import com.donnedesang.model.Receveur;
 import com.donnedesang.model.GroupeSanguin;
+import com.donnedesang.model.StatutDisponibilite;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +13,8 @@ import java.util.stream.Collectors;
 
 public class ReceveurService {
 
-    private ReceveurDAO dao = new ReceveurDAO();
+    private final ReceveurDAO dao = new ReceveurDAO();
+    private final DonneurDAO donneurDAO = new DonneurDAO();
 
     public void ajouterReceveur(Receveur r) {
         if (r.getBesoinPoches() <= 0) r.setBesoinPoches(1);
@@ -34,7 +37,7 @@ public class ReceveurService {
         return dao.findById(id);
     }
 
-    // Retourne receveurs compatibles et non satisfaits pour un donneur donné (utilisé si besoin)
+    // Retourne receveurs compatibles et non satisfaits pour un donneur donné
     public List<Receveur> receveursCompatiblesPourDonneur(GroupeSanguin donneurGroupe) {
         return listerTousParPriorite().stream()
                 .filter(r -> !r.isSatisfait())
@@ -43,19 +46,28 @@ public class ReceveurService {
     }
 
     // associer un donneur à un receveur : met à jour both
-    public void associerDonneurAReceveur(Donneur d, Receveur r) {
-        if (d == null || r == null) return;
-        if (r.isSatisfait()) return;
-        // 1 don par receveur max (r penses: each donor adds 1 poche, receveur can have multiple donors until besoin)
-        if (d.getStatut() != null && d.getStatut().name().equals("DISPONIBLE")) {
-            d.setReceveur(r);
-            r.ajouterDonneur(d);
-            // Donneur becomes non available
-            d.setStatut(com.donnedesang.model.StatutDisponibilite.NON_DISPONIBLE);
-            // persist changes: update via DAO
-              // use DAOs directly (simple)
-            new com.donnedesang.dao.DonneurDAO().update(d);
-            new com.donnedesang.dao.ReceveurDAO().update(r);
+    public boolean associerDonneurAReceveur(Donneur d, Receveur r) {
+        if (d == null || r == null) return false;
+        if (r.isSatisfait() || d.getStatut() != StatutDisponibilite.DISPONIBLE) return false;
+
+        // Ajouter le donneur
+        r.getDonneurs().add(d);
+        d.setReceveur(r);
+        d.setStatut(StatutDisponibilite.NON_DISPONIBLE);
+
+        // Décrémenter le besoin de poches
+        int nouvellesPoches = r.getBesoinPoches() - 1;
+        r.setBesoinPoches(Math.max(nouvellesPoches, 0));
+
+        // Mettre à jour le statut du receveur
+        if (r.getBesoinPoches() == 0) {
+            r.setSatisfait(true);
         }
+
+        // Persist changes
+        donneurDAO.update(d);
+        dao.update(r);
+
+        return true;
     }
 }
