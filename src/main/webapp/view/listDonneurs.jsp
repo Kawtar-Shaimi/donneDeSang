@@ -34,7 +34,7 @@
             <td class="border px-4 py-2">${d.sexe}</td>
             <td class="border px-4 py-2">${d.groupeSanguin}</td>
             <td class="border px-4 py-2">${d.poids}</td>
-            <td class="border px-4 py-2">${d.statutDisponibilite}</td>
+            <td class="border px-4 py-2">${d.statut}</td>
             <td class="border px-4 py-2">
                 <c:if test="${d.hepatiteB}">HepB </c:if>
                 <c:if test="${d.hepatiteC}">HepC </c:if>

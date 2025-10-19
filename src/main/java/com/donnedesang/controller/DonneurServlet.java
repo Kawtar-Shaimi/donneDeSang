@@ -15,19 +15,23 @@ import java.util.List;
 
 public class DonneurServlet extends HttpServlet {
 
-    private DonneurService service = new DonneurService();
+    private final DonneurService service = new DonneurService();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
         List<Donneur> donneurs = service.listerTous();
         req.setAttribute("donneurs", donneurs);
         req.setAttribute("groupes", GroupeSanguin.values());
         req.setAttribute("sexes", Sexe.values());
-        req.getRequestDispatcher("/listDonneurs.jsp").forward(req, resp);
+        req.getRequestDispatcher("/view/listDonneurs.jsp").forward(req, resp);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
         String nom = req.getParameter("nom");
         String prenom = req.getParameter("prenom");
         String cin = req.getParameter("cin");
@@ -38,7 +42,7 @@ public class DonneurServlet extends HttpServlet {
         String groupe = req.getParameter("groupeSanguin");
 
         if (nom == null || prenom == null || cin == null) {
-            req.setAttribute("error", "Nom/prénom/CIN requis.");
+            req.setAttribute("error", "Nom, prénom et CIN sont requis !");
             doGet(req, resp);
             return;
         }
@@ -53,11 +57,27 @@ public class DonneurServlet extends HttpServlet {
             if (naissance != null && !naissance.isEmpty()) {
                 d.setDateNaissance(LocalDate.parse(naissance));
             }
-        } catch (Exception e) { }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        try { d.setPoids(Double.parseDouble(poidsStr)); } catch (Exception e) { d.setPoids(0.0); }
-        try { d.setSexe(Sexe.valueOf(sexeStr)); } catch (Exception e) { d.setSexe(Sexe.MASCULIN); }
-        try { d.setGroupeSanguin(GroupeSanguin.valueOf(groupe)); } catch (Exception e) { d.setGroupeSanguin(GroupeSanguin.O_NEGATIF); }
+        try {
+            d.setPoids(Double.parseDouble(poidsStr));
+        } catch (Exception e) {
+            d.setPoids(0.0);
+        }
+
+        try {
+            d.setSexe(Sexe.valueOf(sexeStr));
+        } catch (Exception e) {
+            d.setSexe(Sexe.MASCULIN);
+        }
+
+        try {
+            d.setGroupeSanguin(GroupeSanguin.valueOf(groupe));
+        } catch (Exception e) {
+            d.setGroupeSanguin(GroupeSanguin.O_NEGATIF);
+        }
 
         d.setHepatiteB(req.getParameter("hepatiteB") != null);
         d.setHepatiteC(req.getParameter("hepatiteC") != null);
@@ -67,6 +87,8 @@ public class DonneurServlet extends HttpServlet {
         d.setAllaitement(req.getParameter("allaitement") != null);
 
         service.ajouterDonneur(d);
+
+        // Redirige vers la liste
         resp.sendRedirect(req.getContextPath() + "/donors");
     }
 }

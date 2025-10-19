@@ -13,7 +13,7 @@
 <div class="max-w-3xl mx-auto mt-10 bg-white p-8 rounded-lg shadow-lg">
     <h2 class="text-3xl font-bold text-red-700 mb-6 text-center">💉 Ajouter un Receveur</h2>
 
-    <form action="receveurs" method="post" class="space-y-5">
+    <form action="${pageContext.request.contextPath}/receveurs" method="post" class="space-y-5">
         <div class="grid grid-cols-2 gap-4">
             <input type="text" name="nom" placeholder="Nom" required class="border rounded-lg px-4 py-2">
             <input type="text" name="prenom" placeholder="Prénom" required class="border rounded-lg px-4 py-2">
@@ -25,18 +25,22 @@
             <input type="date" name="dateNaissance" required class="border rounded-lg px-4 py-2">
             <select name="sexe" required class="border rounded-lg px-4 py-2">
                 <option value="">-- Sexe --</option>
-                <option value="HOMME">Homme</option>
-                <option value="FEMME">Femme</option>
+                <option value="MASCULIN">Homme</option>
+                <option value="FEMININ">Femme</option>
             </select>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
             <select name="groupeSanguin" required class="border rounded-lg px-4 py-2">
                 <option value="">-- Groupe Sanguin --</option>
-                <option>O-</option><option>O+</option>
-                <option>A-</option><option>A+</option>
-                <option>B-</option><option>B+</option>
-                <option>AB-</option><option>AB+</option>
+                <option value="O_NEGATIF">O-</option>
+                <option value="O_POSITIF">O+</option>
+                <option value="A_NEGATIF">A-</option>
+                <option value="A_POSITIF">A+</option>
+                <option value="B_NEGATIF">B-</option>
+                <option value="B_POSITIF">B+</option>
+                <option value="AB_NEGATIF">AB-</option>
+                <option value="AB_POSITIF">AB+</option>
             </select>
 
             <select name="situation" required class="border rounded-lg px-4 py-2">
