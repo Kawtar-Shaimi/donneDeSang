@@ -28,7 +28,13 @@ public class ReceveurServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String idStr = req.getParameter("id");
         Receveur r = new Receveur();
+
+        if (idStr != null && !idStr.isEmpty()) {
+            r.setId(Long.parseLong(idStr));
+        }
+
         r.setNom(req.getParameter("nom"));
         r.setPrenom(req.getParameter("prenom"));
         r.setCin(req.getParameter("cin"));
@@ -60,10 +66,16 @@ public class ReceveurServlet extends HttpServlet {
             default -> r.setBesoinPoches(1);
         }
 
-        r.setPocheRecues(0);
-        r.setSatisfait(false);
+        // Si c’est une nouvelle entrée
+        if (idStr == null || idStr.isEmpty()) {
+            r.setPocheRecues(0);
+            r.setSatisfait(false);
+            receveurService.ajouterReceveur(r);
+        } else {
+            // Sinon on modifie
+            receveurService.modifierReceveur(r);
+        }
 
-        receveurService.ajouterReceveur(r);
         resp.sendRedirect(req.getContextPath() + "/receveurs");
     }
 }
