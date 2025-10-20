@@ -10,59 +10,82 @@
 
 <jsp:include page="navbar.jsp"/>
 
-<div class="max-w-3xl mx-auto mt-10 bg-white p-8 rounded-lg shadow-lg">
-    <h2 class="text-3xl font-bold text-red-700 mb-6 text-center">🩸 Ajouter un Donneur</h2>
+<div class="relative z-10 flex flex-col items-center justify-center py-12 px-4">
+    <div class="w-full max-w-3xl bg-white/90 backdrop-blur-lg shadow-2xl rounded-2xl p-10 border border-red-100">
+        <h2 class="text-4xl font-extrabold text-center text-red-700 mb-6">
+            🩸 Ajouter un Donneur
+        </h2>
+        <p class="text-center text-gray-600 mb-8">
+            Remplissez les informations ci-dessous pour enregistrer un nouveau donneur de sang.
+        </p>
 
-    <form action="${pageContext.request.contextPath}/donors" method="post" class="space-y-5">
-        <!-- Informations personnelles -->
-        <div class="grid grid-cols-2 gap-4">
-            <input type="text" name="nom" placeholder="Nom" required class="border rounded-lg px-4 py-2">
-            <input type="text" name="prenom" placeholder="Prénom" required class="border rounded-lg px-4 py-2">
-            <input type="text" name="cin" placeholder="CIN" required class="border rounded-lg px-4 py-2">
-            <input type="text" name="telephone" placeholder="Téléphone" required class="border rounded-lg px-4 py-2">
-        </div>
+        <form onsubmit="handleSubmit(event)"
+              action="${pageContext.request.contextPath}/donors" method="post"
+              class="space-y-6">
 
-        <!-- Date et Poids -->
-        <div class="grid grid-cols-2 gap-4">
-            <input type="date" name="dateNaissance" required class="border rounded-lg px-4 py-2">
-            <input type="number" name="poids" placeholder="Poids (kg)" required class="border rounded-lg px-4 py-2">
-        </div>
+            <!-- Infos personnelles -->
+            <div class="grid grid-cols-2 gap-5">
+                <input type="text" name="nom" placeholder="Nom" required
+                       class="border rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-red-500 transition w-full">
+                <input type="text" name="prenom" placeholder="Prénom" required
+                       class="border rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-red-500 transition w-full">
+                <input type="text" name="cin" placeholder="CIN" required
+                       class="border rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-red-500 transition w-full">
+                <input type="text" name="telephone" placeholder="Téléphone" required
+                       class="border rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-red-500 transition w-full">
+            </div>
 
-        <!-- Sexe et groupe sanguin -->
-        <div class="grid grid-cols-2 gap-4">
-            <select name="sexe" required class="border rounded-lg px-4 py-2">
-                <option value="">-- Sexe --</option>
-                <option value="MASCULIN">Homme</option>
-                <option value="FEMININ">Femme</option>
-            </select>
+            <!-- Date et poids -->
+            <div class="grid grid-cols-2 gap-5">
+                <input type="date" name="dateNaissance" required
+                       class="border rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-red-500 transition w-full">
+                <input type="number" name="poids" placeholder="Poids (kg)" required
+                       class="border rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-red-500 transition w-full">
+            </div>
 
-            <select name="groupeSanguin" required class="border rounded-lg px-4 py-2">
-                <option value="">-- Groupe Sanguin --</option>
-                <option value="O_NEGATIF">O-</option>
-                <option value="O_POSITIF">O+</option>
-                <option value="A_NEGATIF">A-</option>
-                <option value="A_POSITIF">A+</option>
-                <option value="B_NEGATIF">B-</option>
-                <option value="B_POSITIF">B+</option>
-                <option value="AB_NEGATIF">AB-</option>
-                <option value="AB_POSITIF">AB+</option>
-            </select>
-        </div>
+            <!-- Sexe & Groupe sanguin -->
+            <div class="grid grid-cols-2 gap-5">
+                <select name="sexe" required
+                        class="border rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-red-500 transition w-full">
+                    <option value="">-- Sexe --</option>
+                    <option value="MASCULIN">Homme</option>
+                    <option value="FEMININ">Femme</option>
+                </select>
 
-        <!-- Pathologies -->
-        <div class="grid grid-cols-2 gap-4">
-            <label class="flex items-center gap-2"><input type="checkbox" name="hepatiteB"> Hépatite B</label>
-            <label class="flex items-center gap-2"><input type="checkbox" name="hepatiteC"> Hépatite C</label>
-            <label class="flex items-center gap-2"><input type="checkbox" name="vih"> VIH</label>
-            <label class="flex items-center gap-2"><input type="checkbox" name="diabete"> Diabète</label>
-            <label class="flex items-center gap-2"><input type="checkbox" name="grossesse"> Grossesse</label>
-            <label class="flex items-center gap-2"><input type="checkbox" name="allaitement"> Allaitement</label>
-        </div>
+                <select name="groupeSanguin" required
+                        class="border rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-red-500 transition w-full">
+                    <option value="">-- Groupe Sanguin --</option>
+                    <option value="O_NEGATIF">O-</option>
+                    <option value="O_POSITIF">O+</option>
+                    <option value="A_NEGATIF">A-</option>
+                    <option value="A_POSITIF">A+</option>
+                    <option value="B_NEGATIF">B-</option>
+                    <option value="B_POSITIF">B+</option>
+                    <option value="AB_NEGATIF">AB-</option>
+                    <option value="AB_POSITIF">AB+</option>
+                </select>
+            </div>
 
-        <button type="submit" class="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition">
-            Enregistrer le Donneur
-        </button>
-    </form>
+            <!-- Pathologies -->
+            <div class="bg-red-50 p-4 rounded-xl border border-red-200">
+                <h3 class="text-red-700 font-semibold mb-3">Pathologies / Conditions :</h3>
+                <div class="grid grid-cols-2 gap-3 text-gray-700">
+                    <label class="flex items-center gap-2"><input type="checkbox" name="hepatiteB" class="accent-red-600"> Hépatite B</label>
+                    <label class="flex items-center gap-2"><input type="checkbox" name="hepatiteC" class="accent-red-600"> Hépatite C</label>
+                    <label class="flex items-center gap-2"><input type="checkbox" name="vih" class="accent-red-600"> VIH</label>
+                    <label class="flex items-center gap-2"><input type="checkbox" name="diabete" class="accent-red-600"> Diabète</label>
+                    <label class="flex items-center gap-2"><input type="checkbox" name="grossesse" class="accent-red-600"> Grossesse</label>
+                    <label class="flex items-center gap-2"><input type="checkbox" name="allaitement" class="accent-red-600"> Allaitement</label>
+                </div>
+            </div>
+
+            <!-- bouton -->
+            <button id="submitBtn" type="submit"
+                    class="w-full bg-red-600 text-white py-3 rounded-xl font-semibold hover:bg-red-700 shadow-lg transition-all duration-300">
+                 Enregistrer le Donneur
+            </button>
+        </form>
+    </div>
 </div>
 
 </body>

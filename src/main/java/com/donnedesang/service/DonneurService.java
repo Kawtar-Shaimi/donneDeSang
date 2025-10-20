@@ -5,6 +5,8 @@ import com.donnedesang.model.*;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -64,5 +66,18 @@ public class DonneurService {
     private boolean estPoidsValide(Double poids) {
         if (poids == null) return false;
         return poids >= 50.0;
+    }
+
+    public List<Donneur> donneursMaigre(){
+        return listerTous().stream()
+                .filter(c -> c.getPoids() <  50.0)
+                .sorted(Comparator.comparing(Donneur::getPoids))
+                .toList();
+    }
+
+    public List<Donneur> donneurLourd(){
+        return Collections.singletonList(listerTous().stream()
+                .max(Comparator.comparing(Donneur::getPoids))
+                .orElse(null));
     }
 }

@@ -25,6 +25,13 @@ public class DonneurServlet extends HttpServlet {
         req.setAttribute("donneurs", donneurs);
         req.setAttribute("groupes", GroupeSanguin.values());
         req.setAttribute("sexes", Sexe.values());
+
+        List<Donneur> donneursMaigre = service.donneursMaigre();
+        req.setAttribute("donneursMaigre", donneursMaigre);
+
+        List<Donneur> donneurLourd = service.donneurLourd();
+        req.setAttribute("donneurLourd", donneurLourd);
+
         req.getRequestDispatcher("/view/listDonneurs.jsp").forward(req, resp);
     }
 
