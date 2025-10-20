@@ -32,6 +32,7 @@ public class DonneurServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
+        String idStr = req.getParameter("id");
         String nom = req.getParameter("nom");
         String prenom = req.getParameter("prenom");
         String cin = req.getParameter("cin");
@@ -41,13 +42,12 @@ public class DonneurServlet extends HttpServlet {
         String sexeStr = req.getParameter("sexe");
         String groupe = req.getParameter("groupeSanguin");
 
-        if (nom == null || prenom == null || cin == null) {
-            req.setAttribute("error", "Nom, prénom et CIN sont requis !");
-            doGet(req, resp);
-            return;
+        Donneur d = new Donneur();
+
+        if (idStr != null && !idStr.isEmpty()) {
+            d.setId(Long.parseLong(idStr));
         }
 
-        Donneur d = new Donneur();
         d.setNom(nom);
         d.setPrenom(prenom);
         d.setCin(cin);
@@ -86,9 +86,14 @@ public class DonneurServlet extends HttpServlet {
         d.setGrossesse(req.getParameter("grossesse") != null);
         d.setAllaitement(req.getParameter("allaitement") != null);
 
-        service.ajouterDonneur(d);
+        if (idStr == null || idStr.isEmpty()) {
+            // Nouveau donneur
+            service.ajouterDonneur(d);
+        } else {
+            // Modification
+            service.modifierDonneur(d);
+        }
 
-        // Redirige vers la liste
         resp.sendRedirect(req.getContextPath() + "/donors");
     }
 }
