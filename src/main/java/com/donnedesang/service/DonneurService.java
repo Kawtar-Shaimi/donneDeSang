@@ -67,17 +67,4 @@ public class DonneurService {
         if (poids == null) return false;
         return poids >= 50.0;
     }
-
-    public List<Donneur> donneursMaigre(){
-        return listerTous().stream()
-                .filter(c -> c.getPoids() <  50.0)
-                .sorted(Comparator.comparing(Donneur::getPoids))
-                .toList();
-    }
-
-    public List<Donneur> donneurLourd(){
-        return Collections.singletonList(listerTous().stream()
-                .max(Comparator.comparing(Donneur::getPoids))
-                .orElse(null));
-    }
 }
