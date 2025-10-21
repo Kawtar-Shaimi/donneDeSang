@@ -70,57 +70,64 @@
     </tbody>
 </table>
 
-<h2 class="text-xl font-bold mb-4">Donneurs Maigres (<50kg)</h2>
-<table class="table-auto border-collapse border border-gray-300">
-    <thead>
-    <tr class="bg-gray-200">
-        <th class="border px-4 py-2">Nom</th>
-        <th class="border px-4 py-2">Poids</th>
-        <th class="border px-4 py-2">Groupe</th>
-    </tr>
-    </thead>
-    <tbody>
-    <c:forEach var="d" items="${donneursMaigre}">
-        <tr>
-            <td class="border px-4 py-2">${d.nom}</td>
-            <td class="border px-4 py-2">${d.poids}</td>
-            <td class="border px-4 py-2">${d.groupeSanguin}</td>
-        </tr>
-    </c:forEach>
-    <p>Nombre de donneurs maigres : ${donneursMaigre.size()}</p>
-
-    </tbody>
-</table>
-
-<h2 class="text-xl font-bold mb-4">Donneur Lourd</h2>
-<table class="table-auto border-collapse border border-gray-300">
-    <thead>
-    <tr class="bg-gray-200">
-        <th class="border px-4 py-2">Nom</th>
-        <th class="border px-4 py-2">Poids</th>
-        <th class="border px-4 py-2">Groupe</th>
-    </tr>
-    </thead>
-    <tbody>
-    <c:forEach var="d" items="${donneurLourd}">
-        <tr>
-            <td class="border px-4 py-2">${d.nom}</td>
-            <td class="border px-4 py-2">${d.poids}</td>
-            <td class="border px-4 py-2">${d.groupeSanguin}</td>
-        </tr>
-    </c:forEach>
-<%--    <p>Nombre de donneurs lourd : ${donneurLourd.size()}</p>--%>
-
-    </tbody>
-</table>
-
-<!-- MODAL (inchangé) -->
+<!-- MODAL -->
 <div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-1/2">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-1/2 relative">
         <h2 class="text-2xl font-bold mb-4 text-red-600 text-center">Modifier Donneur</h2>
         <form method="post" class="space-y-3">
             <input type="hidden" name="id" id="editId">
-            <!-- Champ du formulaire (inchangé) -->
+
+            <div>
+                <label>Nom :</label>
+                <input type="text" id="editNom" name="nom" class="border p-2 w-full rounded">
+            </div>
+
+            <div>
+                <label>Prénom :</label>
+                <input type="text" id="editPrenom" name="prenom" class="border p-2 w-full rounded">
+            </div>
+
+            <div>
+                <label>CIN :</label>
+                <input type="text" id="editCin" name="cin" class="border p-2 w-full rounded">
+            </div>
+
+            <div>
+                <label>Téléphone :</label>
+                <input type="text" id="editTel" name="telephone" class="border p-2 w-full rounded">
+            </div>
+
+            <div>
+                <label>Date de naissance :</label>
+                <input type="date" id="editDate" name="dateNaissance" class="border p-2 w-full rounded">
+            </div>
+
+            <div>
+                <label>Poids :</label>
+                <input type="number" id="editPoids" name="poids" class="border p-2 w-full rounded">
+            </div>
+
+            <div>
+                <label>Sexe :</label>
+                <select id="editSexe" name="sexe" class="border p-2 w-full rounded">
+                    <option value="MASCULIN">Masculin</option>
+                    <option value="FEMININ">Féminin</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Groupe sanguin :</label>
+                <select id="editGroupe" name="groupeSanguin" class="border p-2 w-full rounded">
+                    <c:forEach var="g" items="${groupes}">
+                        <option value="${g}">${g}</option>
+                    </c:forEach>
+                </select>
+            </div>
+
+            <div class="flex justify-end gap-2 mt-4">
+                <button type="button" onclick="closeModal()" class="bg-gray-400 text-white px-4 py-2 rounded">Annuler</button>
+                <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded">Modifier</button>
+            </div>
         </form>
     </div>
 </div>
@@ -144,6 +151,14 @@
     function closeModal() {
         document.getElementById("editModal").classList.add("hidden");
     }
+
+    // Fermer le modal en cliquant à l’extérieur
+    window.addEventListener("click", function(event) {
+        const modal = document.getElementById("editModal");
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
 </script>
 
 </body>
